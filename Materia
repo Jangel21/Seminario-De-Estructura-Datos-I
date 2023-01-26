@@ -1,0 +1,176 @@
+#include <iostream>
+#include <cstring>
+#include <string>
+
+using namespace std;
+
+class Materia
+{
+  private:
+      int clave;
+      string nombre;
+      string profesorTit;
+      string libroTexto;
+  public:
+      Materia(int,string,string,string);
+      void imprime();
+      void cambiaclave(int cla);
+      void cambiaprofe(string profe);
+};
+
+ //
+ Materia::Materia(int cla, string nom, string profe, string libro)
+ {
+
+  clave= cla;
+  nombre=nom;
+  profesorTit= profe;
+  libroTexto=libro;
+ }
+
+ // USER'S INFO CONSTRUCTOR
+ void Materia::imprime()
+ {
+     cout<<"\n\t\t USUARIO: "<< nombre<<"\n\t\t CLAVE CLASE: "<< clave;
+     cout<<"\n\t\t PROFESOR: "<< profesorTit<<"\n\t\t TITULO LIBRO: "<< libroTexto;
+ }
+
+ // CONSTRUCTOR TO CHANGE CODE CLASS
+ void Materia::cambiaclave(int cla)
+ {
+     int claveaux;
+     cout<<"\n\n\t\t CLAVE ACTUAL: "<<clave;
+     cout<<"\n\t\t CAMBIAR CLAVE A: ";
+     cin >>claveaux;
+     clave=claveaux;
+     cout<<"\n\n\t\t CLAVE GUARDADA!";
+ }
+
+  //CONSTRUCTOR TO CHANGE PROFESSOR
+  void Materia::cambiaprofe(string profe)
+ {
+     cout<<"\n\n\t\t PROFESOR ACTUAL: "<<profesorTit;
+     cout<<"\n\t\t CAMBIAR PROFESOR A: ";
+     getline(cin, profe);
+     profesorTit=profe;
+     getline(cin,profesorTit);
+     cout<<"\n\n\t\t CAMBIO GUARDADO!";
+ }
+
+int main()
+{
+
+    //OBJECTS
+    Materia Programacion=Materia(12047,"Angel Rodriguez","Jairo Cain","Programacion");
+    Materia BasesDatos=Materia(12047,"Carlos Eduardo","Jairo Cain","Base DE Datos 1");
+
+    //VARIABLES
+    int menu, opc, cla;
+    string profe;
+
+    //BACKGORUND AND LETTER
+    system("color 1f");
+
+    //LOOP & CLEAN
+    do
+    {
+    loop:
+    system("cls");
+
+    //MENU
+    cout<< "\n\n\t\t   CONFIGURACIONES\n\t\t\tMENU"<<endl;
+    cout<< "\n\t\t 1. CAMBIO DE CLAVE\n\t\t 2. CAMBIO DE PROFESOR";
+    cout<< "\n\t\t 3. PERFIL DE USUARIO\n\t\t 4. SALIR\n\n\t\t OPCION: ";
+    fflush(stdin);
+    cin >> menu;
+
+    switch (menu)
+    {
+        //CHANGE USER'S CODE CLASS
+    case 1:
+        system("cls");
+        cout<< "\n\t\t BASE DE DATOS SIIAU\n\t\t\tCLAVE"<<endl;
+        cout<< "\n\t\t 1. PROGRAMACION\n\t\t 2. BASE DE DATOS\n\t\t 3. REGRESO MENU\n\t\t OPCION: ";
+        cin >> opc;
+        switch(opc)
+        {
+        case 1:
+            Programacion.cambiaclave(cla);
+            break;
+        case 2:
+            BasesDatos.cambiaclave(cla);
+            break;
+        case 3:
+            goto loop;
+            break;
+
+        }
+        cout<< "\n\t\t ";
+        system("pause");
+        goto loop;
+        break;
+
+        //CHANGE USER'S PROFESSOR
+    case 2:
+        system("cls");
+        cout<< "\n\t\t BASE DE DATOS SIIAU\n\t\t\tPROFESOR"<<endl;
+        cout<< "\n\t\t 1. PROGRAMACION\n\t\t 2. BASE DE DATOS\n\t\t 3. REGRESO MENU\n\t\t OPCION: ";
+        cin >> opc;
+        switch(opc)
+        {
+        case 1:
+            Programacion.cambiaprofe(profe);
+            break;
+        case 2:
+            BasesDatos.cambiaprofe(profe);
+            break;
+        case 3:
+            goto loop;
+            break;
+
+        }
+        cout<< "\n\t\t ";
+        system("pause");
+        goto loop;
+        break;
+
+        //LOOK AT USER'S INFO
+    case 3:
+        system("cls");
+        cout<< "\n\t\t BASE DE DATOS SIIAU\n\t\t\tUSUARIO"<<endl;
+        cout<< "\n\t\t 1. PROGRAMACION\n\t\t 2. BASE DE DATOS\n\t\t 3. REGRESO MENU\n\t\t OPCION: ";
+        cin >> opc;
+        switch(opc)
+        {
+        case 1:
+            Programacion.imprime();
+            break;
+        case 2:
+            BasesDatos.imprime();
+            break;
+        case 3:
+            goto loop;
+            break;
+
+        }
+        cout<< "\n\t\t ";
+        system("pause");
+        goto loop;
+        break;
+
+        // GET OUT OF THE PROGRAM
+    case 4:
+        cout<< "\n\t\t ";
+        system("pause");
+        return 0;
+        break;
+
+        // ERROR
+    default:
+        break;
+    }
+    }
+    while(menu!=4);
+    return 0;
+
+}
