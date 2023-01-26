@@ -1,0 +1,233 @@
+#include <iostream>
+#include <cstdlib>
+#include <cstdio>
+#include <cstring>
+
+using namespace std;
+
+class Empleado
+{
+  private:
+    int claveEmpleado;
+    string nombre;
+    string domicilio;
+    float sueldo;
+    string reportaA;
+  public:
+      Empleado(int , string , string , float , string );
+
+      void imprime()
+      {
+      cout << "\n\t Clave de trabajador: "<< claveEmpleado<<endl;
+      cout << "\t Nombre del trabajador: "<< nombre<<endl;
+      cout << "\t Domicilio de trabajador: "<< domicilio<<endl;
+      cout << "\t Sueldo de trabajador: "<< sueldo<<endl;
+      cout << "\t Reporta a: "<< reportaA<<endl;
+      }
+
+      void cambiadomic(string domi);
+      void cambiareporta(string repor);
+      void actualsueldo(float sue);
+};
+
+      Empleado::Empleado(int clave, string nom, string domi, float sue, string repor)
+      {
+      claveEmpleado = clave;
+      nombre=nom;
+      domicilio=domi;
+      sueldo = sue;
+      reportaA=repor;
+      }
+
+      void Empleado::cambiadomic(string domi)
+      {
+      cout << "\n\t Empleado: " << nombre;
+      cout << "\n\t Domicilio Actual: " << domicilio;
+      cout << "\n\t Cambia tu domicilio: ";
+      getline(cin, domi);
+      domicilio=domi;
+      getline(cin,domicilio);
+      }
+
+      void Empleado::cambiareporta(string repor)
+      {
+      cout << "\n\t Empleado: " << nombre;
+      cout << "\n\t Reporta Actualmente a: " << reportaA;
+      cout << "\n\t Reportara a: ";
+      getline(cin, repor);
+      reportaA=repor;
+      getline(cin,reportaA);
+      }
+
+      void  Empleado::actualsueldo(float sue)
+      {
+      cout << "\n\t Empleado: " << nombre;
+      cout << "\n\t Salario Actual: " << sueldo;
+      cout << "\n\t Nuevo Salario: ";
+      cin >> sue;
+      sueldo = sue;
+      }
+
+
+int main()
+{
+    Empleado JefePlanta(21,"MANUELO","RIO GANGES 120", 1200.20,"GONZALO");
+    Empleado JefePersonal(20,"PAMELA","REVOLUCION 101", 4200.20,"CARLOS");
+    loop:
+    int menu,salir, opc;
+    float sue;
+    string domi, repor;
+    system("Color 1f");
+    system("cls");
+    cout << "\n\t   C U E N T A   D E   E M P L E A D O "<< endl;
+    cout << "\n\t\t\tM E N U"<<endl;
+    cout << "\n\t\t 1. CAMBIO DE DIRECCION\n\n\t\t 2. CAMBIO DE SALARIO";
+    cout << "\n\n\t\t 3. CAMBIO DE REPORTE\n\n\t\t 4. IMPRIMIR INFORMACION\n\n\t\t 5. SALIR"<<endl;
+    cout << "\n\n\t\t Elija una opcion: ";
+    cin  >> menu;
+    fflush(stdin);
+    switch(menu)
+    {
+
+           case 1:
+               //change adress
+               system("cls");
+               cout << "\t   C U E N T A   D E   E M P L E A D O "<< endl;
+               cout << "\t\t CAMBIO DE DIRECCION "<< endl;
+               cout << "\n\t 1. Jefe Personal\n\n\t 2. Jefe Planta\n\n\t 3. Regresar \n\n\t Opcion: ";
+               cin >> opc;
+               switch (opc)
+               {
+                case 1:
+                 JefePersonal.cambiadomic(domi);
+                 break;
+                case 2:
+                 JefePlanta.cambiadomic(domi);
+                 break;
+                case 3:
+                 goto loop;
+                 break;
+                default:
+                 goto loop;
+                 break;
+               }
+                cout<< "\n\t\t ";
+                system("pause");
+                goto loop;
+                break;
+
+
+           case 2:
+               //change salary
+               system("cls");
+               cout << "\t   C U E N T A   D E   E M P L E A D O "<< endl;
+               cout<<"\t\t CAMBIO DE SALARIO"<< endl;
+               cout << "\n\t 1. Jefe Personal\n\n\t 2. Jefe Planta\n\n\t 3. Regresar \n\n\t Opcion: ";
+               cin >> opc;
+               switch (opc)
+               {
+                case 1:
+                 JefePersonal.actualsueldo(sue);
+                 break;
+                case 2:
+                 JefePlanta.actualsueldo(sue);
+                 break;
+                case 3:
+                 goto loop;
+                 break;
+                default:
+                 goto loop;
+                 break;
+               }
+               cout<< "\n\t\t ";
+               system("pause");
+               goto loop;
+               break;
+
+           case 3:
+               //change report
+               system("cls");
+               cout << "\n\t   C U E N T A   D E   E M P L E A D O "<< endl;
+               cout<<"\t\t CAMBIO DE SALARIO"<< endl;
+               cout << "\n\t 1. Jefe Personal\n\n\t 2. Jefe Planta\n\n\t 3. Regresar \n\n\t Opcion: ";
+               cin >> opc;
+               switch (opc)
+               {
+                case 1:
+                 JefePersonal.cambiareporta(repor);
+                 break;
+                case 2:
+                 JefePlanta.cambiareporta(repor);
+                 break;
+                case 3:
+                 goto loop;
+                 break;
+                default:
+                 goto loop;
+                 break;
+               }
+               cout << "\n\t\t ";
+               system("pause");
+               goto loop;
+               break;
+
+           case 4:
+               //print user's info
+               system("cls");
+               cout << "\n\t   C U E N T A   D E   E M P L E A D O "<< endl;
+               cout<<"\t\t INFORMACION DEL USUARIO"<< endl;
+               cout << "\n\t 1. Jefe Personal\n\n\t 2. Jefe Planta\n\n\t 3. Regresar \n\n\t Opcion: ";
+               cin >> opc;
+               switch (opc)
+               {
+                case 1:
+                 JefePersonal.imprime();
+                 break;
+                case 2:
+                 JefePlanta.imprime();
+                 break;
+                case 3:
+                 goto loop;
+                 break;
+                default:
+                 goto loop;
+                 break;
+               }
+               cout<< "\n\t\t ";
+               system("pause");
+               goto loop;
+               break;
+
+           case 5:
+               //exit
+               system("cls");
+               fflush(stdin);
+               cout << "\n\t   C U E N T A   D E   E M P L E A D O "<< endl;
+               cout << "\n\t\t DESEA SALIR DEL PROGRAMA?\n\t\t  1) SI   0) NO"<< endl;
+               cout << "\n\t\t  || ";
+               fflush(stdin);
+               cin  >> salir;
+               cin.sync();
+               if (salir==1){
+               system("pause");
+               return 0;
+               }
+               else if (salir==0){
+               goto loop;
+               }
+               else{
+               fflush(stdin);
+               goto loop;
+               }
+               break;
+
+           default:
+               //type mistake
+               cout << "\n\t\t Warning: Error al escribir";
+               system("pause");
+               goto loop;
+               break;
+    }
+
+    return 0;
+}
