@@ -1,0 +1,150 @@
+#include <iostream>
+
+using namespace std;
+
+///DEFINIR LA CLASE BASE
+class Mammal
+{
+    private:
+        string name;
+        string owner;
+        string born;
+        string address;
+        int age;
+
+    public:
+        Mammal(string,string,string,string,int);
+        void enterinfo()
+        {
+        cout<<"\n\tName:";
+        cin >>name;
+        cout<<"\n\tName's Owner:";
+        cin >>owner;
+        cout<<"\n\tAddress:";
+        cin >>address;
+        cout<<"\n\tBirth day:";
+        cin >>born;
+        cout<<"\n\tAge:";
+        cin >>age;
+        }
+
+        void imprime();
+
+};
+
+void Mammal::imprime()
+{
+    cout<<"\tName: " << name<<endl;
+    cout<<"\tName's Owner:"<<owner<<endl;
+    cout<<"\tAddress:"<< address<<endl;
+    cout<<"\tBirth day:"<<born<<endl;
+    cout<<"\tAge:"<<age<<endl;
+}
+
+
+///DEFINIR UNA CLASE PARA ANIMAL FELINO
+class Feline: public Mammal
+{
+  string tipo;
+  string type;
+  int attacks;
+  public:
+      void getfelino(string tipo,string type, int attacks)
+      {
+          cout<<"Feline Class: ";
+          cin >>type;
+          cout<<"Attacks History: ";
+          cin >>attacks;
+      }
+
+
+
+};
+
+///DEFINIR UNA CLASE PARA GATOS
+class Domesticat:public Feline
+{
+  string cat;
+  string brand;
+  public:
+      void getcat(string cat,string brand)
+      {
+          cout<<"Cat Breed: ";
+          cin >>cat;
+          cout<<"Cat's Food Brand: ";
+          cin >>brand;
+      }
+};
+
+
+
+int main()
+{
+
+    Feline n1;
+    Domesticat n2;
+    int menu,submenu;
+    string busca;
+    do
+    {
+    loop:
+    system("cls");
+    system("Color 1F");
+    cout<<" \t\t\t\t Animal's Health Matter "<<endl;
+    cout<<" \n\t1. New animal. \n\n\t2. Change info. \n\n\t3. Animal Profile \n\n\t4. Exit"<<endl;
+    cout<<" \n\t>>";
+    cin >> menu;
+    switch(menu)
+    {
+        case 1:
+            system("cls");
+            cout<<" \t\t\t\t Animal's Health Matter "<<endl;
+            cout<<" \n\n\t1. Feline \n\n\t2. Cat \n\n\t3. Return \n\n\t>>";
+            cin >>submenu;
+            switch(submenu)
+            {
+               case 1:
+                   n1.enterinfo();
+
+                   break;
+
+               case 2:
+                   n2.enterinfo();
+
+                   break;
+
+               case 3:
+                   goto loop;
+                   break;
+
+            }
+            break;
+
+        case 2:
+            break;
+
+        case 3:
+            system("cls");
+            cout<<" \t\t\t\t Animal's Health Matter "<<endl;
+            cout<<" \n\n\t1. Feline \n\n\t2. Cat \n\n\t3. Return \n\n\t>>";
+            cin >>submenu;
+            switch(submenu)
+            {
+               case 1:
+                   break;
+
+               case 2:
+                   break;
+
+               case 3:
+                   goto loop;
+                   break;
+
+            }
+            break;
+
+    }
+    }
+    while(menu!=4);
+    return 0;
+}
