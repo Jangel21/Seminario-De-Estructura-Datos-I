@@ -1,0 +1,356 @@
+ #include <iostream>
+ #include <string>
+
+ using namespace std;
+
+ //declaracion de funciones.
+ void inicio();
+ void espacio();
+
+ ///CLASE BASE
+ class Mamifero
+ {
+   private:
+     string Animal, Nombre,Nacio;
+     int Dia,Mes,Anio;
+   public:
+    Mamifero();
+    Mamifero(string Ani,string Nom,string Nac,int D,int M,int A);
+    void ImprimeMamifero();
+    void CambiarAnimal();
+    void CambiarNombre();
+    void CambiarNacimiento();
+    void CambiarLugar();
+    string ObtieneNombre();
+    friend Mamifero& operator +(Mamifero &Tigre, Mamifero &Gatito)
+    {
+        Tigre.Nombre=Tigre.Nombre+Gatito.Nombre;
+        return Tigre;
+    }
+
+    friend std::ostream& operator <<(std::ostream &Tigre, Mamifero &Gatito)
+    {
+        Tigre<<"\n\t Nombre: "<<Gatito.Nombre<<std::endl;
+        return Tigre;
+    }
+
+ };
+
+ Mamifero::Mamifero(){}
+ Mamifero::Mamifero(string Ani,string Nom,string Nac,int D,int M,int A)
+ {
+    Animal=Ani;
+    Nombre=Nom;
+    Nacio=Nac;
+    Dia=D;
+    Mes=M;
+    Anio=A;
+ }
+
+ void Mamifero::ImprimeMamifero()
+ {
+    cout<<"\t Nombre: "<< Nombre<<endl;
+    cout<<"\t Raza: "<< Animal<<endl;
+    cout<<"\t Dia de nacimiento (dd/mm/aaaa): "<<Dia<<"/"<<Mes<<"/"<<Anio<<endl;
+    cout<<"\t Lugar de nacimiento: "<< Nacio<<endl;
+ }
+
+ void Mamifero::CambiarAnimal()
+ {
+    string AniAux;
+    cout<<"\n\n\t Raza actual: "<< Animal<<endl;
+    cout<<"\t Raza a cambiar: ";
+    getline(cin,AniAux);
+    Animal=AniAux;
+    getline(cin,Animal);
+ }
+
+ void Mamifero::CambiarNombre()
+ {
+    string NomAux;
+    cout<<"\n\n\t Nombre de la mascota actual: "<< Nombre<<endl;
+    cout<<"\t Nuevo nombre de la mascota : ";
+    getline(cin,NomAux);
+    Nombre=NomAux;
+    getline(cin,Nombre);
+ }
+
+ void Mamifero::CambiarLugar()
+ {
+    string NacAux;
+    cout<<"\n\n\t Lugar de nacimiento actual: "<< Nacio<<endl;
+    cout<<"\t Correcion de lugar de nacimiento: ";
+    getline(cin,NacAux);
+    Nacio=NacAux;
+    getline(cin,Nacio);
+ }
+
+ void Mamifero::CambiarNacimiento()
+ {
+     int Da,Ma,Aa;
+     cout<<"\n\t Dia de nacimiento actual(dd/mm/aaaa): "<<Dia<<"/"<<Mes<<"/"<<Anio<<endl;
+     cout<<"\n\t Correcion del dia de nacimiento actual(dd/mm/aaaa): \n\t Dia: ";
+     cin >>Da;
+     cout<<"\t Mes: ";
+     cin >>Ma;
+     cout<<"\t Anio: ";
+     cin >>Aa;
+     Dia=Da;
+     Mes=Ma;
+     Anio=Aa;
+     cout<<"\n\n\t Dia de nacimiento actualizado (dd/mm/aaaa): "<<Dia<<"/"<<Mes<<"/"<<Anio<<endl;
+     espacio();
+ }
+
+ string Mamifero::ObtieneNombre()
+ {
+    return Nombre;
+ }
+
+ ///FELINO (DERIVADA)
+ class Felino: public Mamifero
+ {
+    private:
+        string Habitat, Dieta, Propietario;
+    public:
+        Felino(string Ani,string Nom,string Nac,int D,int M,int A,string Habi,string Die,string Propie);
+        void ImprimeFelino();
+        void CambiarPropietario();
+        void CambiarHabitat();
+ };
+
+ Felino::Felino(string Ani,string Nom,string Nac,int D,int M,int A,string Habi,string Die,string Propie):Mamifero(Ani,Nom,Nac,D,M,A)
+ {
+    Habitat=Habi;
+    Dieta=Die;
+    Propietario=Propie;
+ }
+
+ void Felino::ImprimeFelino()
+ {
+    Mamifero::ImprimeMamifero();
+    cout<<"\t Propietario: "<<Propietario<<endl;
+    cout<<"\t Habitat: "<<Habitat<<endl;
+    cout<<"\n\n\n\t DIETA:\n\t Su dieta consiste de "<<Dieta<<" ,dar dos veces al dia"<<endl;
+ }
+
+  void Felino::CambiarPropietario()
+ {
+    string PropieAux;
+    cout<<"\n\n\t Propietario de la mascota actual: "<< Propietario<<endl;
+    cout<<"\t Nuevo propietario de la mascota : ";
+    getline(cin,PropieAux);
+    Propietario=PropieAux;
+    getline(cin,Propietario);
+ }
+
+   void Felino::CambiarHabitat()
+ {
+    string HabAux;
+    cout<<"\n\n\t Lugar donde recidia: "<< Habitat<<endl;
+    cout<<"\t Lugar donde recidira: ";
+    getline(cin,HabAux);
+    Habitat=HabAux;
+    getline(cin,Habitat);
+ }
+
+ ///GATO (SUBDERIVADA)
+ class GatoDomestico: public Felino
+ {
+    private:
+        string MarcaAlimento;
+    public:
+        GatoDomestico(string Ani,string Nom,string Nac,int D,int M,int A,string Habi,string Die,string Propie,string MA);
+        void ImprimeGato();
+ };
+
+
+ GatoDomestico::GatoDomestico(string Ani,string Nom,string Nac,int D,int M,int A,string Habi,string Die,string Propie,string MA):Felino(Ani,Nom,Nac,D,M,A,Habi,Die,Propie)
+ {
+    MarcaAlimento=MA;
+ }
+
+ void GatoDomestico::ImprimeGato()
+ {
+    Felino::ImprimeFelino();
+    cout<<"\t Preferible de la marca "<<MarcaAlimento<<" ,ya que contiene mas proteina"<<endl;
+ }
+
+ void inicio() //minimizar el main
+ {
+    cout<<"\n\t\t\t\t V E T E R I N A R I A"<<endl;
+    cout<<"\t\t\t\t       I N I C I O "<<endl;
+    cout<<"\n\n\t 1. Ver perfiles"<<endl;
+    cout<<"\n\n\t 2. Modificar perfiles"<<endl;
+    cout<<"\n\n\t 3. Salir del sistema"<<endl;
+    cout<<"\n\n\t << ";
+ }
+
+ void espacio() // facilitar la estetica del programa para el system pause
+ {
+    cout<<"\n\t ";
+    system("pause");
+ }
+
+
+ int main()
+ {
+ //Declaracion de un objeto tipo Felino
+ Felino Tigre("Tigre","Estrella Circo","Guadalajara, Mexico",21,06,2004,"Circo Solei","Beef","Angel Ramirez");
+ //Declaracion de un objeto tipo GatoDomestico
+ GatoDomestico Gatito("Gato Albino","Minino","Guadalajara, Mexico",12,06,2000,"Rio Ganges 1041","Pescado","Jose Luis","Whiskas");
+ Mamifero Adios;
+ //declaracion de variables
+ char menu,submenu,sub;
+
+ //ESTILO DEL PROGRAMA
+ system("Color 1f");
+ do
+ {
+     system("cls");
+     inicio();
+     cin>>menu;
+     switch(menu)
+     {
+        case '1':
+            system("cls");
+            cout<<"\n\t\t\t\t V E T E R I N A R I A"<<endl;
+            cout<<"\t\t\t\t      P E R F I L "<<endl;
+            cout<<"\n\n\t 1. Felino \n\n\t 2. Gato\n\n\t << ";
+            cin >>submenu;
+            switch(submenu)
+            {
+                case '1':
+                    system("cls");
+                    cout<<"\n\t\t\t\t V E T E R I N A R I A"<<endl;
+                    cout<<"\t\t\t\t      P E R F I L "<<endl;
+                    cout<<"\n\n\t Informacion el paciente "<<Tigre.ObtieneNombre()<<"\n"<<endl;
+                    Tigre.ImprimeFelino();
+                    break;
+
+                case '2':
+                    system("cls");
+                    cout<<"\n\t\t\t\t V E T E R I N A R I A"<<endl;
+                    cout<<"\t\t\t\t      P E R F I L "<<endl;
+                    cout<<"\n\n\t Informacion el paciente "<<Gatito.ObtieneNombre()<<"\n"<<endl;
+                    Gatito.ImprimeGato();
+                    break;
+
+                default:
+                    cout<<"\n\n\t Ingrese un valor correcto";
+                    break;
+            }
+            espacio();
+            break;
+
+        case '2':
+            system("cls");
+            cout<<"\n\t\t\t\t V E T E R I N A R I A"<<endl;
+            cout<<"\t\t\t\t      P E R F I L "<<endl;
+            cout<<"\n\n\t 1. Felino \n\n\t 2. Gato\n\n\t << ";
+            cin >>submenu;
+            switch(submenu)
+            {
+                case '1':
+                    loop:
+                    system("cls");
+                    cout<<"\n\t\t\t\t V E T E R I N A R I A"<<endl;
+                    cout<<"\t\t\t    M O D I F I C A C I O N  "<<endl;
+                    cout<<"\n\t "<<Tigre.ObtieneNombre()<<endl;
+                    cout<<"\n\n\t 1. Nombre \n\n\t 2. Raza \n\n\t 3. Propietario \n\n\t 4. Nacimiento \n\n\t 5. Habitat \n\n\t 6. Regresar \n\n\t << ";
+                    cin >>sub;
+                    switch(sub)
+                    {
+                       case'1':
+                           Tigre.CambiarNombre();
+                           goto loop;
+                           break;
+                       case'2':
+                           Tigre.CambiarAnimal();
+                           goto loop;
+                           break;
+                       case'3':
+                           Tigre.CambiarPropietario();
+                           goto loop;
+                           break;
+                       case'4':
+                           Tigre.CambiarNacimiento();
+                           goto loop;
+                           break;
+                       case'5':
+                           Tigre.CambiarHabitat();
+                           goto loop;
+                           break;
+                       case'6':
+                           break;
+                       default:
+                           cout<<"\n\n\t Ingrese un valor correcto";
+                           espacio();
+                           goto loop;
+                           break;
+                    }
+                    break;
+
+                case '2':
+                    ret:
+                    system("cls");
+                    cout<<"\n\t\t\t\t V E T E R I N A R I A"<<endl;
+                    cout<<"\t\t\t    M O D I F I C A C I O N  "<<endl;
+                    cout<<"\n\t "<<Gatito.ObtieneNombre()<<endl;
+                    cout<<"\n\n\t 1. Nombre \n\n\t 2. Raza \n\n\t 3. Propietario \n\n\t 4. Nacimiento \n\n\t 5. Habitat \n\n\t 6. Regresar  \n\n\t << ";
+                    cin >>sub;
+                    switch(sub)
+                    {
+                       case'1':
+                           Gatito.CambiarNombre();
+                           goto ret;
+                           break;
+                       case'2':
+                           Gatito.CambiarAnimal();
+                           goto ret;
+                           break;
+                       case'3':
+                           Gatito.CambiarPropietario();
+                           goto ret;
+                           break;
+                       case'4':
+                           Gatito.CambiarNacimiento();
+                           goto ret;
+                           break;
+                       case'5':
+                           Gatito.CambiarHabitat();
+                           goto ret;
+                           break;
+                       case'6':
+                           break;
+                       default:
+                           cout<<"\n\n\t Ingrese un valor correcto";
+                           espacio();
+                           goto ret;
+                           break;
+                    }
+                    break;
+
+                default:
+                    cout<<"\n\n\t Ingrese un valor correcto";
+                    break;
+            }
+            espacio();
+            break;
+
+        case '3':
+            Adios= Tigre + Gatito;
+            cout<<"\n\t Adios "<< Adios;
+            return 0;
+            break;
+
+        default:
+        cout<<"\n\n\t Ingrese un valor correcto";
+        espacio();
+        break;
+
+     }
+ }
+ while(menu!=3);
+ return 0;
+}
