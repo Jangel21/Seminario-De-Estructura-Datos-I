@@ -1,10 +1,11 @@
  #include <iostream>
  #include <string>
+ #define TAM 10
 
  using namespace std;
 
  //declaracion de funciones.
- void inicio();
+ void inicio(int);
  void espacio();
 
  ///CLASE BASE
@@ -21,23 +22,12 @@
     void CambiarNombre();
     void CambiarNacimiento();
     void CambiarLugar();
-    void ObtieneMamifero(string Ani,string Nom,string Nac,int D,int M,int A);
     string ObtieneNombre();
-    friend Mamifero& operator +(Mamifero &Tigre, Mamifero &Gatito)
-    {
-        Tigre.Nombre=Tigre.Nombre+Gatito.Nombre;
-        return Tigre;
-    }
-
-    friend std::ostream& operator <<(std::ostream &Tigre, Mamifero &Gatito)
-    {
-        Tigre<<"\n\t Nombre: "<<Gatito.Nombre<<std::endl;
-        return Tigre;
-    }
 
  };
 
  Mamifero::Mamifero(){}
+
  Mamifero::Mamifero(string Ani,string Nom,string Nac,int D,int M,int A)
  {
     Animal=Ani;
@@ -103,16 +93,6 @@
      espacio();
  }
 
- void ObtieneMamifero(string Ani,string Nom,string Nac,int D,int M,int A)
- {
-    Animal=Ani;
-    Nombre=Nom;
-    Nacio=Nac;
-    Dia=D;
-    Mes=M;
-    Anio=A;
- }
-
  string Mamifero::ObtieneNombre()
  {
     return Nombre;
@@ -128,7 +108,6 @@
         void ImprimeFelino();
         void CambiarPropietario();
         void CambiarHabitat();
-        void ObtieneFelino(string Ani,string Nom,string Nac,int D,int M,int A,string Habi,string Die,string Propie);
  };
 
  Felino::Felino(string Ani,string Nom,string Nac,int D,int M,int A,string Habi,string Die,string Propie):Mamifero(Ani,Nom,Nac,D,M,A)
@@ -166,29 +145,25 @@
     getline(cin,Habitat);
  }
 
- void ObtieneFelino(string Ani,string Nom,string Nac,int D,int M,int A,string Habi,string Die,string Propie)
- {
-    Mamifero::ObtieneMamifero();
-    Habitat=Habi;
-    Dieta=Die;
-    Propietario=Propie;
- }
-
  ///GATO (SUBDERIVADA)
  class GatoDomestico: public Felino
  {
+    friend class ListaEstatica;
+
     private:
         string MarcaAlimento;
+        float elemento;
     public:
-        GatoDomestico(string Ani,string Nom,string Nac,int D,int M,int A,string Habi,string Die,string Propie,string MA);
+        GatoDomestico(string Ani,string Nom,string Nac,int D,int M,int A,string Habi,string Die,string Propie,string MA,float elem);
         void ImprimeGato();
-        void ObtieneGato(string Ani,string Nom,string Nac,int D,int M,int A,string Habi,string Die,string Propie,string MA);
+
  };
 
 
- GatoDomestico::GatoDomestico(string Ani,string Nom,string Nac,int D,int M,int A,string Habi,string Die,string Propie,string MA):Felino(Ani,Nom,Nac,D,M,A,Habi,Die,Propie)
+ GatoDomestico::GatoDomestico(string Ani,string Nom,string Nac,int D,int M,int A,string Habi,string Die,string Propie,string MA,float elem):Felino(Ani,Nom,Nac,D,M,A,Habi,Die,Propie)
  {
     MarcaAlimento=MA;
+    elemento=elem;
  }
 
  void GatoDomestico::ImprimeGato()
@@ -197,188 +172,245 @@
     cout<<"\t Preferible de la marca "<<MarcaAlimento<<" ,ya que contiene mas proteina"<<endl;
  }
 
- void GatoDomestico::ObtieneGato(string Ani,string Nom,string Nac,int D,int M,int A,string Habi,string Die,string Propie,string MA)
- {
-     Felino::ObtieneFelino();
-     MarcaAlimento=MA;
+ ///LISTA ESTATICA
+ class ListaEstatica{
+ private:
+    float datos[TAM];
+    int ult;
+    float dato;
+ public:
+    ListaEstatica():ult(-1){}
+    bool vacia()const;
+    bool llena()const;
+    bool inserta(float, int);
+    bool elimina(int);
+    float recupera(int)const;
+    int primero()const;
+    int ultimo()const;
+    void imprime()const;
+    int buscar(float);
+ };
+
+ int ListaEstatica::buscar(float elem){
+    int i=0, band=0;
+    while(i<=ult){
+        if(elem ==datos[i]){
+            cout<<"\n\n\t Se encontro "<<elem<<" en posicion "<<i+1;
+            band=1;
+            return i;
+        }
+        i++;
+    }
+    if(band==0)
+    {
+        cout<<"\n\n\t No se encontro "<<elem<<" en ninguna posicion";
+    }
+    return i;
  }
 
+ void ListaEstatica::imprime()const{
+    if(!vacia()){
+        for(int i=0; i<=ult; i++){
+            cout<<"\n\n\t "<<i+1<<") "<<datos[i]<<endl;
+        }
+    }
+ }
 
- void inicio() //minimizar el main
+ bool ListaEstatica::vacia()const{
+    return ult==-1;
+ }
+ bool ListaEstatica::llena()const{
+    return ult==TAM-1;
+ }
+
+ bool ListaEstatica::inserta(float elem, int pos){
+    if(llena() || pos<0 || pos>ult+1){
+        cout<<"\n\n\t No se pudo insertar";
+        return false;
+    }
+    int i=ult+1;
+    while(i>pos){
+        datos[i]=datos[i-1];
+        i--;
+    }
+    cout<<"\n\n\t Se guardo "<<elem<<" en posicion "<<i+1;
+    datos[pos]=elem;
+    ult++;
+    return true;
+ }
+
+ bool ListaEstatica::elimina(int pos){
+     pos=pos-1;
+    if(vacia() || pos<0 || pos>ult){
+        cout<<"\n\n\t No se pudo eliminar";
+        return false;
+    }
+    int i=pos;
+    while(i<ult)
+        {
+        datos[i]=datos[i+1];
+        i++;
+        }
+        cout<<"\n\n\t Se elimino correctamente";
+        ult--;
+        return true;
+ }
+
+ float ListaEstatica::recupera(int pos)const{
+    if(vacia() || pos<0 || pos>ult-1){
+        std::cout<<"\n Insuficiencia de datos";
+    }
+    else{
+       return datos[pos];
+     }
+     return pos;
+ }
+
+ int ListaEstatica::primero()const{
+    if(vacia()){
+       return -1;
+    }
+    return 0;
+ }
+ int ListaEstatica::ultimo()const{
+    if(vacia()){
+       return -1;
+    }
+     return ult;
+ }
+
+ ///FUNCIONES
+ void inicio(int cont) //minimizar el main
  {
     cout<<"\n\t\t\t\t V E T E R I N A R I A"<<endl;
-    cout<<"\t\t\t\t       I N I C I O "<<endl;
-    cout<<"\n\n\t 1. Ver perfiles"<<endl;
-    cout<<"\n\n\t 2. Modificar perfiles"<<endl;
-    cout<<"\n\n\t 3. Salir del sistema"<<endl;
+    cout<<"\n\t\t\t\t      I N I C I O "<<endl;
+    cout<<"\n\t\t\t\t Espacio En Memoria: ["<<cont<<"/"<<TAM<<"]"<<endl;
+    cout<<"\n\n\t 1. Agrega"<<endl;
+    cout<<"\n\n\t 2. Buscar"<<endl;
+    cout<<"\n\n\t 3. Elimina"<<endl;
+    cout<<"\n\n\t 4. Ingresa"<<endl;
+    cout<<"\n\n\t 5. Muestra"<<endl;
+    cout<<"\n\n\t 6. Salir"<<endl;
     cout<<"\n\n\t << ";
  }
 
  void espacio() // facilitar la estetica del programa para el system pause
  {
-    cout<<"\n\t ";
+    cout<<"\n\n\n\t ";
     system("pause");
  }
 
 
  int main()
  {
- //Declaracion de un objeto tipo Felino
- Felino Tigre("Tigre","Estrella Circo","Guadalajara, Mexico",21,06,2004,"Circo Solei","Beef","Angel Ramirez");
- //Declaracion de un objeto tipo GatoDomestico
- GatoDomestico Gatito("Gato Albino","Minino","Guadalajara, Mexico",12,06,2000,"Rio Ganges 1041","Pescado","Jose Luis","Whiskas");
- Mamifero Adios;
- //declaracion de variables
- char menu,submenu,sub;
-
  //ESTILO DEL PROGRAMA
- system("Color 1f");
+ system("Color 3f");
+ //Declaracion de un objeto tipo GatoDomestico
+  GatoDomestico *Gatito;
+  Gatito = new GatoDomestico("Gato Albino","Minino","Guadalajara, Mexico",12,06,2000,"Rio Ganges 1041","Pescado","Jose Luis","Whiskas", 0);
+  ListaEstatica lista;
+
+ //declaracion de variables
+ char menu,sub;
+ float elem;
+ int cont, pos;
+ bool band=false;
+
  do
  {
      system("cls");
-     inicio();
-     cin>>menu;
+     inicio(cont); cin>>menu;
      switch(menu)
      {
-        case '1':
-            system("cls");
-            cout<<"\n\t\t\t\t V E T E R I N A R I A"<<endl;
-            cout<<"\t\t\t\t      P E R F I L "<<endl;
-            cout<<"\n\n\t 1. Felino \n\n\t 2. Gato\n\n\t << ";
-            cin >>submenu;
-            switch(submenu)
-            {
-                case '1':
-                    system("cls");
-                    cout<<"\n\t\t\t\t V E T E R I N A R I A"<<endl;
-                    cout<<"\t\t\t\t      P E R F I L "<<endl;
-                    cout<<"\n\n\t Informacion el paciente "<<Tigre.ObtieneNombre()<<"\n"<<endl;
-                    Tigre.ImprimeFelino();
-                    break;
-
-                case '2':
-                    system("cls");
-                    cout<<"\n\t\t\t\t V E T E R I N A R I A"<<endl;
-                    cout<<"\t\t\t\t      P E R F I L "<<endl;
-                    cout<<"\n\n\t Informacion el paciente "<<Gatito.ObtieneNombre()<<"\n"<<endl;
-                    Gatito.ImprimeGato();
-                    break;
-
-                default:
-                    cout<<"\n\n\t Ingrese un valor correcto";
-                    break;
-            }
-            espacio();
-            break;
+       case '1':
+           if(lista.llena())
+           {
+                cout<<"\n\n\t Ya no puede agregar mas elemento en este mes";
+                espacio();
+           }
+           else
+           {
+                cout<<"\n\n\t Cantidad de comida consumida: ";cin>>elem;
+                lista.inserta(elem,cont); cont++;
+                espacio();
+           }
+           break;
 
         case '2':
-            system("cls");
-            cout<<"\n\t\t\t\t V E T E R I N A R I A"<<endl;
-            cout<<"\t\t\t\t      P E R F I L "<<endl;
-            cout<<"\n\n\t 1. Felino \n\n\t 2. Gato\n\n\t << ";
-            cin >>submenu;
-            switch(submenu)
-            {
-                case '1':
-                    loop:
-                    system("cls");
-                    cout<<"\n\t\t\t\t V E T E R I N A R I A"<<endl;
-                    cout<<"\t\t\t    M O D I F I C A C I O N  "<<endl;
-                    cout<<"\n\t "<<Tigre.ObtieneNombre()<<endl;
-                    cout<<"\n\n\t 1. Nombre \n\n\t 2. Raza \n\n\t 3. Propietario \n\n\t 4. Nacimiento \n\n\t 5. Habitat \n\n\t 6. Regresar \n\n\t << ";
-                    cin >>sub;
-                    switch(sub)
-                    {
-                       case'1':
-                           Tigre.CambiarNombre();
-                           goto loop;
-                           break;
-                       case'2':
-                           Tigre.CambiarAnimal();
-                           goto loop;
-                           break;
-                       case'3':
-                           Tigre.CambiarPropietario();
-                           goto loop;
-                           break;
-                       case'4':
-                           Tigre.CambiarNacimiento();
-                           goto loop;
-                           break;
-                       case'5':
-                           Tigre.CambiarHabitat();
-                           goto loop;
-                           break;
-                       case'6':
-                           break;
-                       default:
-                           cout<<"\n\n\t Ingrese un valor correcto";
-                           espacio();
-                           goto loop;
-                           break;
-                    }
-                    break;
+           if(lista.vacia())
+           {
+                cout<<"\n\n\t Ingrese valores";
+                espacio();
+           }
+           else
+           {
+                cout<<"\n\n\t Buscar cantidad: ";cin>> elem;
+                lista.buscar(elem);
+                espacio();
+           }
+           break;
 
-                case '2':
-                    ret:
-                    system("cls");
-                    cout<<"\n\t\t\t\t V E T E R I N A R I A"<<endl;
-                    cout<<"\t\t\t    M O D I F I C A C I O N  "<<endl;
-                    cout<<"\n\t "<<Gatito.ObtieneNombre()<<endl;
-                    cout<<"\n\n\t 1. Nombre \n\n\t 2. Raza \n\n\t 3. Propietario \n\n\t 4. Nacimiento \n\n\t 5. Habitat \n\n\t 6. Regresar  \n\n\t << ";
-                    cin >>sub;
-                    switch(sub)
-                    {
-                       case'1':
-                           Gatito.CambiarNombre();
-                           goto ret;
-                           break;
-                       case'2':
-                           Gatito.CambiarAnimal();
-                           goto ret;
-                           break;
-                       case'3':
-                           Gatito.CambiarPropietario();
-                           goto ret;
-                           break;
-                       case'4':
-                           Gatito.CambiarNacimiento();
-                           goto ret;
-                           break;
-                       case'5':
-                           Gatito.CambiarHabitat();
-                           goto ret;
-                           break;
-                       case'6':
-                           break;
-                       default:
-                           cout<<"\n\n\t Ingrese un valor correcto";
-                           espacio();
-                           goto ret;
-                           break;
-                    }
-                    break;
+       case '3':
+           if(lista.vacia())
+           {
+                cout<<"\n\n\t Ingrese valores";
+                espacio();
+           }
+           else
+           {
+               cout<<"\n\n\t Eliminar dia: ";cin>> pos;
+               if(lista.elimina(pos)==true)
+               {
+                   cont--;
+               }
+               espacio();
+           }
+           break;
 
-                default:
-                    cout<<"\n\n\t Ingrese un valor correcto";
-                    break;
-            }
-            espacio();
-            break;
+       case '4':
+           if(lista.vacia())
+           {
+                cout<<"\n\n\t Ingrese valores";
+                espacio();
+           }
+           else if(lista.llena())
+           {
+               cout<<"\n\n\t Lista llena";
+               espacio();
+           }
+           else
+           {
+               cout<<"\n\n\t Cantidad de comida consumida: ";cin>> elem;
+               cout<<"\n\n\t Insertar dia: ";cin>> pos;
+               lista.inserta(elem,pos);
+               espacio();
+           }
+           break;
 
-        case '3':
-            Adios= Tigre + Gatito;
-            cout<<"\n\t Adios "<< Adios;
-            return 0;
-            break;
 
-        default:
-        cout<<"\n\n\t Ingrese un valor correcto";
-        espacio();
-        break;
+       case '5':
+           if(lista.vacia())
+           {
+                cout<<"\n\n\t Ingrese valores";
+                espacio();
+           }
+           else
+           {
+               lista.imprime();
+               espacio();
+           }
+           break;
 
+       case '6':
+           system("color CF");
+           cout<<"\n\n\t Hasta Luego ;)";
+           espacio();
+           sub=6;
+           return 0;
+           break;
      }
+
  }
- while(menu!=3);
+ while(menu!=6);
  return 0;
 }
