@@ -1,0 +1,125 @@
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+class Pila {
+private:
+    string *PilaArray;
+    int top;
+    int size;
+
+public:
+    Pila(int s) {
+        size = s;
+        PilaArray = new string[size];
+        top = -1;
+    }
+
+    ~Pila() {
+        delete [] PilaArray;
+    }
+
+    bool Llena() {
+        return top == size - 1;
+    }
+
+    bool vacia() {
+        return top == -1;
+    }
+
+    void push(string x) {
+        if (Llena()) {
+            cout << "Error: Pila is full." << endl;
+        } else {
+            top++;
+            PilaArray[top] = x;
+        }
+    }
+
+    string pop() {
+        if (vacia()) {
+            cout << "Error: Pila esta vacia." << endl;
+            return "";
+        } else {
+            string x = PilaArray[top];
+            top--;
+            return x;
+        }
+    }
+
+    string peek() {
+        if (vacia()) {
+            cout << "Error: Pila esta vacia." << endl;
+            return "";
+        } else {
+            return PilaArray[top];
+        }
+    }
+};
+
+int getPrecedence(char op) {
+    if (op == '^') {
+        return 3;
+    } else if (op == '*' || op == '/') {
+        return 2;
+    } else if (op == '+' || op == '-') {
+        return 1;
+    } else {
+        return 0;
+    }
+}
+
+string infijaApostfija(string infija) {
+    Pila Pila(infija.length());
+    string postfija = "";
+
+    for (int i = 0; i < infija.length(); i++) {
+        char c = infija[i];
+
+        if (c == '(') {
+            Pila.push("(");
+        } else if (c == ')') {
+            while (Pila.peek() != "(") {
+                postfija += Pila.pop() + " ";
+            }
+            Pila.pop(); // Pop the left parenthesis
+        } else if (c == '+' || c == '-' || c == '*' || c == '/' || c == '^') {
+            while (!Pila.vacia() && getPrecedence(Pila.peek()[0]) >= getPrecedence(c)) {
+                postfija += Pila.pop() + " ";
+            }
+            Pila.push(string(1, c));
+        } else if (c >= '0' && c <= '9') {
+            string operand = "";
+            while (i < infija.length() && infija[i] >= '0' && infija[i] <= '9') {
+                operand += infija[i];
+                i++;
+            }
+            i--;
+            postfija += operand + " ";
+        }
+    }
+
+    while (!Pila.vacia()) {
+        postfija += Pila.pop() + " ";
+    }
+
+    return postfija;
+}
+
+int main() {
+    int ciclo;
+    do
+    {
+        string infija;
+        cout <<"Introduce la operacion infija: ";
+        cin >> infija;
+        cout <<"La operacion postfija: ";
+        string postfija = infijaApostfija(infija);
+        cout << postfija << endl;
+        cout <<"\nRepetir operacion 1) No 0) Si : ";
+        cin >> ciclo;
+    }
+    while(ciclo!=1);
+    return 0;
+}
