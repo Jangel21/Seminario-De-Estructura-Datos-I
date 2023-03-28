@@ -1,0 +1,377 @@
+#include <iostream>
+#define TAM 50
+
+class persona{
+public:
+    std::string nombre;
+    std::string carrera;
+    int asignaturas;
+    persona(){};
+    float promedio;
+    bool operator <(const persona &a)
+    {
+        if(a.promedio < promedio)
+            return true;
+        else
+            return false;
+    }
+    bool operator >(const persona &a)
+    {
+        if(a.promedio > promedio )
+            return true;
+        else
+            return false;
+    }
+
+    bool operator <=(const persona &a)
+    {
+        if(a.promedio < promedio || a.promedio == promedio)
+            return true;
+        else
+            return false;
+    }
+    bool operator >=(const persona &a)
+    {
+        if(a.promedio > promedio || a.promedio == promedio)
+            return true;
+        else
+            return false;
+    }
+
+
+    friend std::ostream & operator<<(std::ostream &O, persona &x){
+            O<<"\n     Nombre: "<<x.nombre<<std::endl;
+            O<<"\n     Carrera: "<<x.carrera<<std::endl;
+            O<<"\n     Asignaturas: "<<x.asignaturas<<std::endl;
+            O<<"\n     Promedio: "<<x.promedio<<std::endl;
+            return O;
+    }
+    friend std::istream & operator>>(std::istream &O, persona &x){
+            std::cout<<"\n     Nombre: ";
+            O>>x.nombre;
+            std::cout<<"\n     Carrera: ";
+            O>>x.carrera;
+            std::cout<<"\n     Asignaturas: ";
+            O>>x.asignaturas;
+            std::cout<<"\n     Promedio: ";
+            O>>x.promedio;
+            return O;
+    }
+    std::string GetName()
+    {
+        return nombre;
+    }
+
+};
+
+//plantillas
+template<class T>
+class Lista
+{
+    private:
+        T datos[TAM];
+        int ult;
+    public:
+        Lista():ult(-1){}
+        bool inserta(T , int);
+        bool elimina(int);
+        T recupera(int)const;
+        int primero()const;
+        int ultimo()const;
+        void imprime()const;
+        void imprimePrimero()const;
+        bool vacia()const;
+        bool llena()const;
+        void busqueda();
+        int busquedaBinaria(float);
+        void quicksort();
+        void quicksortRecursiva(T* , int, int);
+        void insercion();
+};
+
+template<class T>
+void Lista<T>::quicksort()
+{
+    int der = ultimo();
+    quicksortRecursiva(datos, 0, der);
+}
+
+template<class T>
+void Lista<T>::quicksortRecursiva(T datos[], int izq, int der)
+{
+    if (izq < der)
+    {
+        std::swap(datos[(izq+der)/2],datos [der]);
+        int i = izq, j = der;
+
+        while (i < j)
+        {
+            while (i < j && datos[i] <= datos[der])
+            {
+                i++;
+            }
+            while (i < j && datos[i] >= datos[der])
+            {
+                j--;
+            }
+            if (i!=j)
+            {
+                std::swap(datos[i], datos[j]);
+            }
+        }
+        std::swap(datos[izq], datos[j]);
+
+        quicksortRecursiva(datos, izq, j - 1);
+        quicksortRecursiva(datos, j + 1, der);
+    }
+}
+
+
+template<class T>
+void Lista<T>::imprime()const{
+    if(!vacia()){
+        for(int i=0; i<=ult; i++){
+            persona x=datos[i];
+            std::cout<<x<<std::endl;
+        }
+    }
+}
+
+template<class T>
+void Lista<T>::imprimePrimero()const
+{
+    if(!vacia())
+        {
+            int i = 0;
+            persona x=datos[i];
+            std::cout<<x<<std::endl;
+        }
+}
+
+
+template<class T>
+bool Lista<T>::vacia()const{
+    return ult==-1;
+}
+
+template<class T>
+bool Lista<T>::llena()const{
+    return ult==TAM-1;
+}
+
+template<class T>
+bool Lista<T>::inserta(T x, int pos){
+    if(llena() || pos<0 || pos>ult+1){
+        std::cout<<"\n No se pudo insertar";
+        return false;
+    }
+    int i=ult+1;
+    while(i>pos){
+        datos[i]=datos[i-1];
+        i--;
+    }
+    datos[pos]=x;
+    ult++;
+    return true;
+}
+
+template<class T>
+bool Lista<T>::elimina(int pos){
+    if(vacia() || pos<0 || pos>ult){
+        std::cout<<"\n No se pudo eliminar";
+        return false;
+    }
+    int i=pos;
+    while(i<ult){
+        datos[i]=datos[i+1];
+        i++;
+    }
+    ult--;
+    return true;
+}
+
+template<class T>
+T Lista<T>::recupera(int pos)const{
+    if(vacia() || pos<0 || pos>ult-1){
+        std::cout<<"\n Insuficiencia de datos";
+        //Manejar exceptions
+    }
+    else{
+       return datos[pos];
+    }
+}
+
+template<class T>
+int Lista<T>::primero()const{
+    if(vacia()){
+       return -1;
+    }
+    return 0;
+}
+
+template<class T>
+int Lista<T>::ultimo()const{
+    if(vacia()){
+       return -1;
+    }
+    return ult;
+}
+
+template<class T>
+void Lista<T>::busqueda()
+{
+    if(!vacia())
+    {
+        int valor;
+        float elem;
+        std::cout<<"\n\t\t IMPRESION DE CONSTANCIAS"<<std::endl;
+        std::cout<<"\n\t Escribe el promedio de la persona a buscar: ";
+        std::cin >> elem;
+        valor = busquedaBinaria(elem);
+
+        if(valor==-1)
+        {
+            std::cout<<"\n\t No se encontro "<<elem<<", aun no se da de alta"<<std::endl;
+        }
+        else if(valor>=0)
+        {
+            valor = ultimo() - valor + 1;
+            if(valor==1)
+            std::cout<<"\n\t Esta constancia es la siguiente en imprimirse, ya que tiene el promedio mas alto"<<std::endl;
+            else if(valor>1)
+            std::cout<<"\n\t Se encontro "<<elem<<" en la posicion "<<valor<<" de la lista"<<std::endl;
+        }
+    }
+    else
+    {
+            std::cout<<"\n\t\t IMPRESION DE CONSTANCIAS"<<std::endl;
+            std::cout<<"\n\n\t\t    Lista vacia";
+    }
+
+}
+
+
+
+template<class T>
+int Lista<T>::busquedaBinaria(float elem)
+{
+    int i = 0;
+    int j = ultimo();
+
+    while (i <= j) {
+        int medio =  (i+j) / 2;
+
+        if (elem == datos[medio].promedio) {
+            std::cout<<datos[medio]<<std::endl;
+            return medio;
+        }
+        else if (elem < datos[medio].promedio) {
+            j = medio - 1;
+        }
+        else
+        {
+            i = medio + 1;
+        }
+    }
+    return -1;
+}
+
+template<class T>
+void Lista<T>::insercion()
+{
+        persona aux;
+        int i = 1;
+        while(i<= ult)
+        {
+            aux = datos[i];
+            int j = i;
+
+            while( j > 0 && aux < datos[j-1])
+            {
+                datos[j] = datos [j-1];
+                j--;
+            }
+            if (i!=j)
+            {
+                datos[j] = aux;
+            }
+            i++;
+        }
+}
+
+void inicio(int cont)
+{
+    system("cls");
+    system("color F0");
+    std::cout<<" \n\t\t _ A L T A    D E    C O N S T A N C I A S _ "<<std::endl;
+    std::cout<<"\n\t\t         _ [ "<<cont<<" / 50 ] _ "<<std::endl;
+    std::cout<<"\n\n\t\t\t 1. Dar de alta  \n\n\n\t\t\t 2. Imprimir constancia";
+    std::cout<<"\n\n\n\t\t\t 3. Buscar Constancia \n\n\n\t\t\t 4. Salida";
+    std::cout<<"\n\n\n\t\t\t Seleciona: ";
+}
+
+int main()
+{
+    Lista<persona> MiLista;
+    persona x;
+    int cont = 0;
+    char menu;
+    do
+    {
+        inicio(cont);
+        std::cin >> menu;
+        switch(menu)
+        {
+        case '1':
+            system("cls");
+            std::cout<<"\n\t\t INGRESE LA INFORMACION A DAR DE ALTA"<<std::endl;
+            std::cin>>x;
+            MiLista.inserta(x,cont);
+            cont++;
+            break;
+
+        case '2':
+            system("cls");
+            if(!MiLista.vacia())
+            {
+                MiLista.insercion();
+                std::cout<<"\n\t\t IMPRESION DE CONSTANCIAS"<<std::endl;
+                MiLista.imprimePrimero();
+                MiLista.elimina(0);
+                cont--;
+                std::cout<<"\n\n\n     ";
+                system("pause");
+            }
+            else
+            {
+                std::cout<<"\n\t\t IMPRESION DE CONSTANCIAS"<<std::endl;
+                std::cout<<"\n\n\t\t       Lista vacia \n\n\n\t\t";
+                system("pause");
+            }
+            break;
+
+        case '3':
+            system("cls");
+            MiLista.quicksort();
+            MiLista.busqueda();
+            std::cout<<"\n\n\t ";
+            system("pause");
+            break;
+
+        case '4':
+            system("color CF");
+            return 0;
+            break;
+
+        default:
+            system("cls"); system("color CF");
+            std::cout<<"\n\t\t _ A L T A    D E    C O N S T A N C I A S _ "<<std::endl;
+            std::cout<<"\n\n\t\t       Introduzca un valor correcto \n\n\n\t\t";
+            system("pause");
+            break;
+
+        }
+    }
+    while(menu!=4);
+    return 0;
+}
