@@ -1,0 +1,478 @@
+#include <iostream>
+
+using namespace std;
+
+class SocioClub
+{
+    public:
+        string Nombre;
+        string Domicilio;
+        int NumeroSocio;
+        int AnioIngreso;
+        friend std::ostream & operator<<(std::ostream &O, SocioClub &x)
+        {
+                O<<"\n     Nombre: "<<x.Nombre<<std::endl;
+                O<<"\n     Domicilio: "<<x.Domicilio<<std::endl;
+                O<<"\n     Anio De Ingreso: "<<x.AnioIngreso<<std::endl;
+                O<<"\n     Numero De Ingreso: "<<x.NumeroSocio<<std::endl;
+                return O;
+        }
+        friend std::istream & operator>>(std::istream &O, SocioClub &x)
+        {
+                std::cout<<"\n     Nombre: ";
+                O>>x.Nombre;
+                std::cout<<"\n     Domicilio: ";
+                O>>x.Domicilio;
+                std::cout<<"\n     Anio De Ingreso: ";
+                O>>x.AnioIngreso;
+                std::cout<<"\n     Numero De Ingreso: ";
+                O>>x.NumeroSocio;
+                return O;
+        }
+};
+
+template<class T>
+class LSLSE;
+
+template<class T>
+class node{
+private:
+    T data;
+    node<T> *sig;
+public:
+    node():sig(nullptr){};
+    friend class SocioClub;
+    friend class LSLSE<T>;
+};
+
+template<class T>
+class LSLSE
+{
+    private:
+        node<T> *head;
+    public:
+        ///Constructor
+        LSLSE():head(nullptr){};
+        ///Insertar
+        void insertar(node<T>*, T);
+        void InsertarInicio(T);
+        void InsertarFinal(T);
+        ///Nodos
+        node<T>* ultimo()const;
+        node<T>* primero()const;
+        node<T>* anterior(node<T>*)const;
+        bool vacia()const;
+        ///Busqueda
+        void buscaSocio(string);
+        void buscaDomicilio(string);
+        node<T>* buscaEliminar(int);
+        bool buscaDuplica(T);
+        ///Eliminacion
+        int eliminar(node<T>*, int);
+        bool eliminarDupliacado(node<T>*);
+        ///Impresion
+        void imprimir()const;
+        ///Ordenamiento
+        void ordenar();
+
+};
+
+///Insertar
+template<class T>
+void LSLSE<T>::insertar(node<T>* pos, T elem){
+    node<T>* aux = new node<T>;
+    aux->data = elem;
+
+    if(pos==nullptr)
+    {
+        aux->sig = head;
+        head = aux;
+    }
+    else{
+        aux->sig=pos->sig;
+        pos->sig=aux;
+    }
+}
+
+template<class T>
+void LSLSE<T>::InsertarInicio(T data){
+    node<T> *Primero;
+    Primero = new node<T>();
+    Primero->data = data;
+    Primero->sig = head;
+    head = Primero;
+}
+
+template<class T>
+void LSLSE<T>::InsertarFinal(T data){
+    node<T> *Primero, *Ultimo;
+    Primero = new node<T>();
+    Primero->data = data;
+
+    if(head)
+    {
+        Ultimo = head;
+        while(Ultimo->sig)
+            Ultimo = Ultimo->sig;
+        Ultimo->sig = Primero;
+    }
+    else
+    {
+        head = Primero;
+    }
+}
+
+///Nodos
+template<class T>
+node<T>* LSLSE<T>::ultimo()const{
+    if(vacia()){
+        return nullptr;
+    }
+    node<T>* aux=head;
+    while(aux->sig!=nullptr){
+        aux=aux->sig;
+    }
+    return aux;
+}
+template<class T>
+node<T>* LSLSE<T>::primero()const{
+    if(vacia()){
+        return nullptr;
+    }
+    return head;
+}
+template<class T>
+node<T>* LSLSE<T>::anterior(node<T>* pos)const{
+    if(vacia() || pos==nullptr){
+        return nullptr;
+    }
+    node<T>* aux=head;
+    while(aux!=nullptr && aux->sig!=pos){
+        aux=aux->sig;
+    }
+    return aux;
+}
+template<class T>
+bool LSLSE<T>::vacia()const{
+    if(head==nullptr)
+        return true;
+    return false;
+}
+
+///Busqueda
+template<class T>
+void LSLSE<T>::buscaSocio(string referencia){
+    node<T> * Q, *Resp = nullptr;
+    if(head)
+    {
+        Q = head;
+        while ((Q->data.Nombre != referencia)&&(Q->sig))
+            Q = Q->sig;
+        if(Q->data.Nombre == referencia)
+        {
+            Resp = Q;
+            std::cout<<Resp->data;
+        }
+        else
+        {
+            std::cout<<"\n\n\t No se encontro "<<referencia<<" en las membresias";
+        }
+    }
+}
+template<class T>
+void LSLSE<T>::buscaDomicilio(string referencia){
+    node<T> * Q, *Resp = nullptr;
+    if(head)
+    {
+        Q = head;
+        while ((Q->data.Domicilio != referencia)&&(Q->sig))
+            Q = Q->sig;
+        if(Q->data.Domicilio == referencia)
+        {
+            Resp = Q;
+            std::cout<<Resp->data;
+        }
+        else
+            std::cout<<"\n\n\t No se encontro "<<referencia<<" en las membresias";
+    }
+}
+template<class T>
+node<T>* LSLSE<T>::buscaEliminar(int referencia){
+    node<T> * Q, *Resp = nullptr;
+    if(head)
+    {
+        Q = head;
+        while ((Q->data.NumeroSocio != referencia)&&(Q->sig))
+            Q = Q->sig;
+        if(Q->data.NumeroSocio == referencia)
+        {
+            Resp = Q;
+            std::cout<<"\n\n\t Se elimino correctamente";
+        }
+        else
+            std::cout<<"\n\n\t No se encontro "<<referencia<<" en las membresias";
+    }
+    return Resp;
+}
+template<class T>
+bool LSLSE<T>::buscaDuplica(T referencia){
+    node<T> * Q ;
+    if(head)
+    {
+        Q = head;
+        while ((Q->data.NumeroSocio != referencia.NumeroSocio)&&(Q->sig))
+        Q = Q->sig;
+
+        if(Q->data.NumeroSocio == referencia.NumeroSocio)
+        {
+            return true;
+        }
+
+    }
+    return false;
+}
+
+///Eliminacion
+template<class T>
+int LSLSE<T>::eliminar(node<T>* pos, int cont){
+    if(vacia() || pos == nullptr)
+    {
+        return cont;
+    }
+    if(pos==head)
+    {
+        head=head->sig;
+    }
+    else
+    {
+        anterior(pos)->sig=pos->sig;
+    }
+    delete pos;
+    return cont-1;
+}
+template<class T>
+bool LSLSE<T>::eliminarDupliacado(node<T>* pos){
+    if(vacia() || pos == nullptr)
+    {
+        return false;
+    }
+    if(pos==head)
+    {
+        head=head->sig;
+    }
+    else
+    {
+        anterior(pos)->sig=pos->sig;
+    }
+    delete pos;
+    return true;
+}
+
+///Impresion
+template<class T>
+void LSLSE<T>::imprimir()const{
+    node<T>* aux = head;
+    int cont=1;
+    while(aux!=nullptr)
+    {
+        std::cout<<"\n"<<cont<<". \n"<<aux->data<<std::endl;
+        aux=aux->sig;
+        cont++;
+    }
+}
+
+template<class T>
+void LSLSE<T>::ordenar()
+{
+
+    node<T> *curr = head;
+    node<T> *temp = nullptr;
+    SocioClub t;
+    if (head == nullptr) {
+        return;
+    }else {
+        while (curr != nullptr) {
+            temp = curr->sig;
+            while (temp != nullptr) {
+            if (curr->data.NumeroSocio > temp->data.NumeroSocio) {
+                t = curr->data;
+                curr->data = temp->data;
+                temp->data = t;
+            }
+            temp = temp->sig;
+        }
+        curr = curr->sig;
+        }
+    }
+}
+
+
+
+
+///Menu
+void inicio(int cont)
+{
+    system("cls");
+    system("color F0");
+    std::cout<<" \n\t\t _ C L U B     D E P O R T I V O _ "<<std::endl;
+    std::cout<<"\n\t\t         _ [ "<<cont<<" / 50 ] _ "<<std::endl;
+    std::cout<<"\n\n\t\t\t 1. Regristar a un nuevo socio.  \n\n\n\t\t\t 2. Dar de baja a un nuevo socio.";
+    std::cout<<"\n\n\n\t\t\t 3. Reporte de socios \n\n\n\t\t\t 4. Busqueda de socio";
+    std::cout<<"\n\n\n\t\t\t 5. Calcular \n\n\n\t\t\t 6. Salida";
+    std::cout<<"\n\n\n\t\t\t Seleciona: ";
+}
+
+int main()
+{
+    LSLSE<SocioClub> MiLista;
+    SocioClub x;
+    int cont = 0;
+
+    char menu;
+    do
+    {
+        inicio(cont);
+        std::cin >> menu;
+        switch(menu)
+        {
+        case '1':
+            system("cls");
+            std::cout<<"\n\t\t INGRESE LA INFORMACION A DAR DE ALTA"<<std::endl;
+            std::cin>>x;
+            if(MiLista.buscaDuplica(x)==false)
+            {
+                MiLista.insertar(MiLista.ultimo(),x);
+                cont++;
+                MiLista.ordenar();
+            }
+            else
+                std::cout<<"\n\t\t No se ingresara este numero, ya que esta duplicado"<<std::endl;
+            std::cout<<"\n\n\t ";
+            system("pause");
+            break;
+
+        case '2':
+            system("cls");
+            if(MiLista.vacia())
+            {
+                system("color CF");
+                std::cout<<" \n\t\t _ C L U B     D E P O R T I V O _ "<<std::endl;
+                std::cout<<"\n\n\t\t       Lista vacia \n\n\n\t\t";
+            }
+            else
+            {
+                int referencia;
+                SocioClub borrar;
+                std::cout<<" \n\t\t _ C L U B     D E P O R T I V O _ "<<std::endl;
+                std::cout<<"\n\t Ingrese el numero de socio a eliminar: ";
+                std::cin >> referencia;
+                cont = MiLista.eliminar(MiLista.buscaEliminar(referencia),cont);
+            }
+            std::cout<<"\n\n\t ";
+            system("pause");
+            break;
+
+        case '3':
+            system("cls");
+            if(MiLista.vacia())
+            {
+                system("color CF");
+                std::cout<<" \n\t\t _ C L U B     D E P O R T I V O _ "<<std::endl;
+                std::cout<<"\n\n\t\t       Lista vacia \n\n\n\t\t";
+            }
+            else
+            {
+                MiLista.imprimir();
+            }
+            std::cout<<"\n\n\t ";
+            system("pause");
+            break;
+
+        case '4':
+            system("cls");
+            if(MiLista.vacia())
+            {
+                system("color CF");
+                std::cout<<"\n\t\t _ C L U B     D E P O R T I V O _ "<<std::endl;
+                std::cout<<"\n\n\t\t       Lista vacia \n\n\n\t\t";
+                std::cout<<"\n\n\t ";
+                system("pause");
+            }
+            else
+            {
+                char menu2;
+                std::string elem;
+                std::cout<<"\n\t\t _ C L U B     D E P O R T I V O _ "<<std::endl;
+                std::cout<<"\n\n\t\t\t 1. Buscar por nombre.  \n\n\n\t\t\t 2. Buscar por domicilio. \n\n\n\t\t\t 3. Salir.";
+                std::cin >> menu2;
+                switch(menu2)
+                {
+                    case '1':
+                        system("cls");
+                        std::cout << " \n\t\t _ C L U B     D E P O R T I V O _ " <<std::endl;
+                        std::cout << " \nIngrese el nombre del socio a buscar: ";
+                        std::cin >> elem;
+                        MiLista.buscaSocio(elem);
+                        break;
+
+                    case '2':
+                        system("cls");
+                        std::cout << " \n\t\t _ C L U B     D E P O R T I V O _ " <<std::endl;
+                        std::cout << " \nIngrese el domicilio del socio a buscar: ";
+                        std::cin >> elem;
+                        MiLista.buscaDomicilio(elem);
+                        break;
+
+                    case '3':
+                        break;
+
+                    default:
+                    system("cls"); system("color CF");
+                    std::cout<<" \n\t\t _ C L U B     D E P O R T I V O _ "<<std::endl;
+                    std::cout<<"\n\n\t\t       Introduzca un valor correcto \n\n\n\t\t";
+                    break;
+                }
+                std::cout<<"\n\n\t ";
+                system("pause");
+
+            }
+            break;
+
+        case '5':
+            system("cls");
+            if(MiLista.vacia())
+            {
+                system("color CF");
+                std::cout<<"\n\t\t _ C L U B     D E P O R T I V O _ "<<std::endl;
+                std::cout<<"\n\n\t\t       Lista vacia \n\n\n\t\t";
+            }
+            else
+            {
+                std::cout<<"\n\t\t _ C L U B     D E P O R T I V O _ "<<std::endl;
+
+                std::cout<<"\n\t [ "<<cont<<" / 50 ] "<<std::endl;
+                std::cout<<"\n\t Se encuentran activas "<<cont<<" activas por el momento"<<std::endl;
+                std::cout<<"\n\t Ingresos al mes de "<<cont*550<<std::endl;
+            }
+            std::cout<<"\n\n\t ";
+            system("pause");
+            break;
+
+        case '6':
+            system("color CF");
+            return 0;
+            break;
+
+
+        default:
+            system("cls"); system("color CF");
+            std::cout<<" \n\t\t _ C L U B     D E P O R T I V O _ "<<std::endl;
+            std::cout<<"\n\n\t\t       Introduzca un valor correcto \n\n\n\t\t";
+            system("pause");
+            break;
+
+        }
+    }
+    while(menu!=6);
+    return 0;
+}
