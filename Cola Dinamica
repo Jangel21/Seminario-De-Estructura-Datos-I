@@ -1,0 +1,250 @@
+#include <iostream>
+#define TAM 50
+
+class persona{
+private:
+    std::string nombre, carrera;
+    int asignaturas;
+    float promedio;
+public:
+    persona(){};
+    friend std::ostream & operator<<(std::ostream &O, persona &x){
+            O<<"\n Nombre: "<<x.nombre<<std::endl;
+            O<<"\n Carrera: "<<x.carrera<<std::endl;
+            O<<"\n Asignaturas: "<<x.asignaturas<<std::endl;
+            O<<"\n Promedio: "<<x.promedio<<std::endl;
+            return O;
+    }
+    friend std::istream & operator>>(std::istream &O, persona &x){
+            std::cout<<"\n Nombre: ";
+            O>>x.nombre;
+            std::cout<<"\n Carrera: ";
+            O>>x.carrera;
+            std::cout<<"\n Asignaturas: ";
+            O>>x.asignaturas;
+            std::cout<<"\n Promedio: ";
+            O>>x.promedio;
+            return O;
+    }
+};
+
+template<class T>
+class Cola;
+
+template<class T>
+class node{
+private:
+    T data;
+    node<T> *sig;
+public:
+    node():sig(nullptr){};
+    friend class persona;
+    friend class Cola<T>;
+};
+
+//plantillas
+template<class T>
+class Cola{
+private:
+    node<T> *head;
+
+public:
+    Cola():head(nullptr){}
+    void insertar(node<T>*, T);
+    void InsertarInicio(T);
+    void InsertarFinal(T);
+    void eliminar(node<T>*);
+    node<T>* ultimo()const;
+    node<T>* primero()const;
+    node<T>* anterior(node<T>*)const;
+    bool vacia()const;
+    void imprimir()const;
+    bool Queue(T&);
+    bool Dequeue();
+    persona Front()const;
+
+};
+
+///Insertar
+template<class T>
+void Cola<T>::insertar(node<T>* pos, T elem){
+    node<T>* aux = new node<T>;
+    aux->data = elem;
+
+    if(pos==nullptr)
+    {
+        aux->sig = head;
+        head = aux;
+    }
+    else{
+        aux->sig=pos->sig;
+        pos->sig=aux;
+    }
+}
+
+template<class T>
+void Cola<T>::InsertarInicio(T data){
+    node<T> *Primero;
+    Primero = new node<T>();
+    Primero->data = data;
+    Primero->sig = head;
+    head = Primero;
+}
+
+template<class T>
+void Cola<T>::InsertarFinal(T data){
+    node<T> *Primero, *Ultimo;
+    Primero = new node<T>();
+    Primero->data = data;
+
+    if(head)
+    {
+        Ultimo = head;
+        while(Ultimo->sig)
+            Ultimo = Ultimo->sig;
+        Ultimo->sig = Primero;
+    }
+    else
+    {
+        head = Primero;
+    }
+}
+
+template<class T>
+bool Cola<T>::Queue(T& elem){
+    if(vacia()){
+        insertar(primero(),elem);
+    }
+    else{
+        insertar(ultimo(),elem);
+    }
+    return true;
+}
+
+///Nodos
+template<class T>
+node<T>* Cola<T>::ultimo()const{
+    if(vacia()){
+        return nullptr;
+    }
+    node<T>* aux=head;
+    while(aux->sig!=nullptr){
+        aux=aux->sig;
+    }
+    return aux;
+}
+
+template<class T>
+node<T>* Cola<T>::primero()const{
+    if(vacia()){
+        return nullptr;
+    }
+    return head;
+}
+
+template<class T>
+node<T>* Cola<T>::anterior(node<T>* pos)const{
+    if(vacia() || pos==nullptr){
+        return nullptr;
+    }
+    node<T>* aux=head;
+    while(aux!=nullptr && aux->sig!=pos){
+        aux=aux->sig;
+    }
+    return aux;
+}
+
+template<class T>
+bool Cola<T>::vacia()const{
+    if(head==nullptr)
+        return true;
+    return false;
+}
+
+///Eliminacion
+template<class T>
+bool Cola<T>::Dequeue(){
+    if(vacia()){
+        return false;
+    }
+    else{
+        eliminar(primero());
+    }
+    return true;
+}
+
+template<class T>
+void Cola<T>::eliminar(node<T>* pos){
+    if(vacia() || pos == nullptr)
+    {
+        return;
+    }
+    if(pos==head)
+    {
+        head=head->sig;
+    }
+    else
+    {
+        anterior(pos)->sig=pos->sig;
+    }
+    delete pos;
+}
+
+template<class T>
+persona Cola<T>::Front()const{
+    node<T> *ab = primero();
+    persona a = ab->data;
+    return a;
+}
+
+template<class T>
+void Cola<T>::imprimir()const{
+    node<T>* aux = head;
+    int cont=1;
+    while(aux!=nullptr)
+    {
+        std::cout<<"\n"<<cont<<". \n"<<aux->data<<std::endl;
+        aux=aux->sig;
+        cont++;
+    }
+}
+
+int main()
+{
+    Cola<persona> MiCola;
+    persona x;
+    char menu;
+    do
+    {
+    system("cls");
+    system("color F0");
+    std::cout<<"\n\t Hogwarts"<<std::endl;
+    std::cout<<"\n\t 1)Dar de alta  \n\n\t 2)Imprimir constancia \n\n\t Seleciona: ";
+    std::cin >> menu;
+    switch(menu)
+    {
+    case '1':
+        system("cls");
+        std::cin>>x;
+        MiCola.Queue(x);
+        break;
+    case '2':
+        system("cls");
+        if(!MiCola.vacia())
+        {
+            x=MiCola.Front();
+            std::cout<<x<<std::endl;
+            MiCola.Dequeue();
+            system("pause");
+        }
+        else
+        {
+            std::cout<<"Cola vacia"<<std::endl;
+            system("pause");}
+        break;
+
+    }
+    }
+    while(menu!=3);
+    return 0;
+}
