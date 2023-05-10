@@ -1,0 +1,373 @@
+#include <iostream>
+
+class SocioClub
+{
+    public:
+        std::string Nombre;
+        std::string Domicilio;
+        int NumeroSocio;
+        int AnioIngreso;
+        friend std::ostream & operator<<(std::ostream &O, SocioClub &x)
+        {
+                O<<"\n     Nombre: "<<x.Nombre<<std::endl;
+                O<<"\n     Domicilio: "<<x.Domicilio<<std::endl;
+                O<<"\n     Anio De Ingreso: "<<x.AnioIngreso<<std::endl;
+                O<<"\n     Numero De Ingreso: "<<x.NumeroSocio<<std::endl;
+                return O;
+        }
+        friend std::istream & operator>>(std::istream &O, SocioClub &x)
+        {
+                std::cout<<"\n     Nombre: ";
+                O>>x.Nombre;
+                std::cout<<"\n     Domicilio: ";
+                O>>x.Domicilio;
+                std::cout<<"\n     Anio De Ingreso: ";
+                O>>x.AnioIngreso;
+                std::cout<<"\n     Numero De Ingreso: ";
+                O>>x.NumeroSocio;
+                return O;
+        }
+        bool operator !=(const SocioClub &a) {
+            return (a.Nombre != Nombre && a.Domicilio != Domicilio && a.NumeroSocio != NumeroSocio);
+        }
+        bool operator ==(const SocioClub &a) {
+            return (a.Nombre == Nombre && a.Domicilio == Domicilio && a.NumeroSocio == NumeroSocio);
+        }
+};
+
+template<class T>
+class LDLLSE;
+
+template<class T>
+class nodo{
+private:
+    T data;
+    nodo<T>* sig;
+    nodo<T>* ant;
+public:
+    nodo():sig(nullptr), ant(nullptr){};
+    friend class LDLLSE<T>;
+};
+
+template<class T>
+class LDLLSE{
+private:
+    nodo<T>* ancla;
+public:
+    LDLLSE(): ancla(nullptr){};
+    bool vacia()const;
+    nodo<T>* primero()const;
+    nodo<T>* ultimo()const;
+    nodo<T>* anterior(nodo<T>*)const;
+    nodo<T>* siguiente(nodo<T>* )const;
+    nodo<T>* localiza(T)const;
+    T recupera(nodo<T>* )const;
+    void imprime()const;
+    void busqueda(T elem)const;
+    void anula();
+    void inserta(nodo<T>* pos, T elem);
+    int elimina(nodo<T>* pos, int cont);
+};
+
+template<class T>
+void LDLLSE<T>::inserta(nodo<T>* pos, T elem){
+    nodo<T>* aux = new nodo<T>();
+    aux->data = elem;
+
+     if (pos == NULL) {
+        aux->ant = NULL;
+        aux->sig = ancla;
+        if (ancla != NULL) {
+            ancla->ant = aux;
+        }
+        ancla = aux;
+    } else {
+        aux->ant = pos;
+        aux->sig = pos->sig;
+        if (pos->sig != NULL) {
+            pos->sig->ant = aux;
+        }
+        pos->sig = aux;
+    }
+}
+
+template<class T>
+int LDLLSE<T>::elimina(nodo<T>* pos, int cont){
+    if(vacia()|| pos==nullptr)
+    {
+        std::cout<<"\n\t No se encontro el dato";
+    }
+    else
+    {
+        if(pos->ant!=nullptr)
+            pos->ant->sig=pos->sig;
+        if(pos->sig!=nullptr)
+            pos->sig->ant=pos->ant;
+        if(pos==ancla)
+            ancla=ancla->sig;
+        delete pos;
+        std::cout<<"\n\t Se elimino el dato";
+        cont = cont - 1;
+    }
+    return cont;
+}
+
+template<class T>
+nodo<T>* LDLLSE<T>::primero()const{
+    return ancla;
+}
+
+template<class T>
+nodo<T>* LDLLSE<T>::ultimo()const{
+    if(vacia()){
+        return ancla;
+    }
+    else{
+        nodo<T>* aux=ancla;
+        while(aux->sig!=nullptr){
+            aux=aux->sig;
+        }
+        return aux;
+    }
+}
+
+template<class T>
+nodo<T>* LDLLSE<T>::anterior(nodo<T>* pos)const{
+    if(vacia()|| pos==nullptr){
+        return nullptr;
+    }
+    else{
+        return pos->ant;
+    }
+}
+
+template<class T>
+nodo<T>* LDLLSE<T>::siguiente(nodo<T>* pos)const{
+    if(vacia()|| pos==nullptr){
+        return nullptr;
+    }
+    else{
+        return pos->sig;
+    }
+}
+
+template<class T>
+nodo<T>* LDLLSE<T>::localiza(T elem)const{
+    nodo<T>* aux = ancla;
+    while(aux!=nullptr && aux->data!=elem){
+        aux=aux->sig;
+    }
+    return aux;
+}
+
+template<class T>
+T LDLLSE<T>::recupera(nodo<T>* pos)const{
+    if(vacia()|| pos==nullptr){
+
+    }
+    else{
+        return pos->data;
+    }
+}
+
+
+template<class T>
+bool LDLLSE<T>::vacia()const{
+    if(ancla==nullptr){
+        return true;
+    }
+    return false;
+}
+
+template<class T>
+void LDLLSE<T>::imprime()const{
+    if(!vacia()){
+        nodo<T>* aux=ancla;
+        while(aux!=nullptr){
+            std::cout<<aux->data<<std::endl;
+            aux=aux->sig;
+        }
+    }
+}
+
+template<class T>
+void LDLLSE<T>::busqueda(T elem)const{
+    nodo<T>* busqueda = localiza(elem);
+    if(busqueda!=nullptr)
+        std::cout<< busqueda->data;
+    else
+        std::cout<<"\n\t No se encontro el dato";
+}
+
+template<class T>
+void LDLLSE<T>::anula(){
+    nodo<T>* aux;
+    while(ancla!=nullptr){
+        aux=ancla;
+        ancla=aux->sig;
+        delete aux;
+    }
+}
+
+///Menu
+void inicio(int cont)
+{
+    system("cls");
+    system("color F0");
+    std::cout<<" \n\t\t _ C L U B     D E P O R T I V O _ "<<std::endl;
+    std::cout<<"\n\t\t         _ [ "<<cont<<" / 50 ] _ "<<std::endl;
+    std::cout<<"\n\n\t\t\t 1. Registra a un nuevo socio.  \n\n\n\t\t\t 2. Dar de baja a un nuevo socio.";
+    std::cout<<"\n\n\n\t\t\t 3. Reporte de socios \n\n\n\t\t\t 4. Busqueda de socio";
+    std::cout<<"\n\n\n\t\t\t 5. Calcular \n\n\n\t\t\t 6. Salida";
+    std::cout<<"\n\n\n\t\t\t Seleciona: ";
+}
+
+int main()
+{
+    LDLLSE<SocioClub> MiLista;
+    SocioClub x, z;
+    int cont = 0;
+
+    char menu;
+    do
+    {
+        inicio(cont);
+        std::cin >> menu;
+        switch(menu)
+        {
+        case '1':
+            system("cls");
+            std::cout<<"\n\t\t INGRESE LA INFORMACION A DAR DE ALTA"<<std::endl;
+            std::cin>>x;
+            MiLista.inserta(MiLista.ultimo(),x);
+            cont++;
+            std::cout<<"\n\n\t ";
+            system("pause");
+            break;
+
+        case '2':
+            system("cls");
+            if(MiLista.vacia())
+            {
+                system("color CF");
+                std::cout<<" \n\t\t _ C L U B     D E P O R T I V O _ "<<std::endl;
+                std::cout<<"\n\n\t\t       Lista vacia \n\n\n\t\t";
+            }
+            else
+            {
+                int referencia;
+                std::cout<<" \n\t\t _ C L U B     D E P O R T I V O _ "<<std::endl;
+                std::cout<<"\n\t Ingrese el numero de socio a eliminar: ";
+                std::cin >> referencia;
+                x.NumeroSocio = referencia;
+                cont = MiLista.elimina(MiLista.localiza(x),cont);
+            }
+            std::cout<<"\n\n\t ";
+            system("pause");
+            break;
+
+        case '3':
+            system("cls");
+            if(MiLista.vacia())
+            {
+                system("color CF");
+                std::cout<<" \n\t\t _ C L U B     D E P O R T I V O _ "<<std::endl;
+                std::cout<<"\n\n\t\t       Lista vacia \n\n\n\t\t";
+            }
+            else
+            {
+                MiLista.imprime();
+            }
+            std::cout<<"\n\n\t ";
+            system("pause");
+            break;
+
+        case '4':
+            system("cls");
+            if(MiLista.vacia())
+            {
+                system("color CF");
+                std::cout<<"\n\t\t _ C L U B     D E P O R T I V O _ "<<std::endl;
+                std::cout<<"\n\n\t\t       Lista vacia \n\n\n\t\t";
+                std::cout<<"\n\n\t ";
+                system("pause");
+            }
+            else
+            {
+                char menu2;
+                std::string elem;
+                std::cout<<"\n\t\t _ C L U B     D E P O R T I V O _ "<<std::endl;
+                std::cout<<"\n\n\t\t\t 1. Buscar por nombre.  \n\n\n\t\t\t 2. Buscar por domicilio. \n\n\n\t\t\t 3. Salir. \n\n\n\t\t\t Opcion: ";
+                std::cin >> menu2;
+                switch(menu2)
+                {
+                    case '1':
+                        system("cls");
+                        std::cout << " \n\t\t _ C L U B     D E P O R T I V O _ " <<std::endl;
+                        std::cout << " \nIngrese el nombre del socio a buscar: ";
+                        std::cin >> elem;
+                        x.Nombre = elem;
+                        MiLista.busqueda(x);
+                        break;
+
+                    case '2':
+                        system("cls");
+                        std::cout << " \n\t\t _ C L U B     D E P O R T I V O _ " <<std::endl;
+                        std::cout << " \nIngrese el domicilio del socio a buscar: ";
+                        x.Domicilio = elem;
+                        MiLista.busqueda(x);
+                        break;
+
+                    case '3':
+                        break;
+
+                    default:
+                    system("cls"); system("color CF");
+                    std::cout<<" \n\t\t _ C L U B     D E P O R T I V O _ "<<std::endl;
+                    std::cout<<"\n\n\t\t       Introduzca un valor correcto \n\n\n\t\t";
+                    break;
+                }
+                std::cout<<"\n\n\t ";
+                system("pause");
+
+            }
+            break;
+
+            case '5':
+            system("cls");
+            if(MiLista.vacia())
+            {
+                system("color CF");
+                std::cout<<"\n\t\t _ C L U B     D E P O R T I V O _ "<<std::endl;
+                std::cout<<"\n\n\t\t       Lista vacia \n\n\n\t\t";
+            }
+            else
+            {
+                std::cout<<"\n\t\t _ C L U B     D E P O R T I V O _ "<<std::endl;
+
+                std::cout<<"\n\t [ "<<cont<<" / 50 ] "<<std::endl;
+                std::cout<<"\n\t Se encuentran activas "<<cont<<" activas por el momento"<<std::endl;
+                std::cout<<"\n\t Ingresos al mes de "<<cont*550<<std::endl;
+            }
+            std::cout<<"\n\n\t ";
+            system("pause");
+            break;
+
+        case '6':
+            system("color CF");
+            return 0;
+            break;
+
+
+        default:
+            system("cls"); system("color CF");
+            std::cout<<" \n\t\t _ C L U B     D E P O R T I V O _ "<<std::endl;
+            std::cout<<"\n\n\t\t       Introduzca un valor correcto \n\n\n\t\t";
+            system("pause");
+            break;
+
+        }
+    }
+    while(menu!=6);
+    return 0;
+}
