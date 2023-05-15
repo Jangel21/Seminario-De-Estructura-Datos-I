@@ -28,10 +28,10 @@ class SocioClub
                 return O;
         }
         bool operator !=(const SocioClub &a) {
-            return (a.Nombre != Nombre && a.Domicilio != Domicilio && a.NumeroSocio != NumeroSocio);
+            return (a.NumeroSocio != NumeroSocio);
         }
         bool operator ==(const SocioClub &a) {
-            return (a.Nombre == Nombre && a.Domicilio == Domicilio && a.NumeroSocio == NumeroSocio);
+            return (a.NumeroSocio == NumeroSocio);
         }
 };
 
@@ -63,7 +63,7 @@ public:
     nodo<T>* localiza(T)const;
     T recupera(nodo<T>* )const;
     void imprime()const;
-    void busqueda(T elem)const;
+    void busqueda(std::string)const;
     void anula();
     void inserta(nodo<T>* pos, T elem);
     int elimina(nodo<T>* pos, int cont);
@@ -191,12 +191,21 @@ void LDLLSE<T>::imprime()const{
 }
 
 template<class T>
-void LDLLSE<T>::busqueda(T elem)const{
-    nodo<T>* busqueda = localiza(elem);
-    if(busqueda!=nullptr)
-        std::cout<< busqueda->data;
-    else
-        std::cout<<"\n\t No se encontro el dato";
+void LDLLSE<T>::busqueda(std::string elem)const{
+    nodo<T> * Q, *Resp = nullptr;
+    if(ancla)
+    {
+        Q = ancla;
+        while ((Q->data.Domicilio != elem||Q->data.Nombre == elem)&&(Q->sig))
+            Q = Q->sig;
+        if(Q->data.Domicilio == elem||Q->data.Nombre == elem)
+        {
+            Resp = Q;
+            std::cout<<Resp->data;
+        }
+        else
+            std::cout<<"\n\n\t No se encontro "<<elem<<" en las membresias";
+    }
 }
 
 template<class T>
@@ -260,7 +269,16 @@ int main()
                 std::cout<<"\n\t Ingrese el numero de socio a eliminar: ";
                 std::cin >> referencia;
                 x.NumeroSocio = referencia;
-                cont = MiLista.elimina(MiLista.localiza(x),cont);
+                nodo<SocioClub>* pos = MiLista.localiza(x);
+                if (pos == nullptr)
+                {
+                    std::cout<<"\n\t No se encontro el dato";
+                }
+                else
+                {
+                    cont = MiLista.elimina(pos,cont);
+                }
+
             }
             std::cout<<"\n\n\t ";
             system("pause");
@@ -306,16 +324,15 @@ int main()
                         std::cout << " \n\t\t _ C L U B     D E P O R T I V O _ " <<std::endl;
                         std::cout << " \nIngrese el nombre del socio a buscar: ";
                         std::cin >> elem;
-                        x.Nombre = elem;
-                        MiLista.busqueda(x);
+                        MiLista.busqueda(elem);
                         break;
 
                     case '2':
                         system("cls");
                         std::cout << " \n\t\t _ C L U B     D E P O R T I V O _ " <<std::endl;
                         std::cout << " \nIngrese el domicilio del socio a buscar: ";
-                        x.Domicilio = elem;
-                        MiLista.busqueda(x);
+                        std::cin >> elem;
+                        MiLista.busqueda(elem);
                         break;
 
                     case '3':
