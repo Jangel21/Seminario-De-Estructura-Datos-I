@@ -287,7 +287,7 @@ void arbol<T>::elimina(nodo<T>* pos, nodo<T>*& arbol) {
     else if(pos->data>arbol->data)
         elimina(pos,arbol->der);
     else if(arbol->izq && arbol->der){
-        nodo<T>* high = mayor(arbol->izq);
+        nodo<T>* high = menor(arbol->der);
         arbol->data = high->data;
         elimina(high,arbol->izq);
     }
