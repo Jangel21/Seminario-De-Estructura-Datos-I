@@ -303,7 +303,7 @@ void arbol<T>::recorrido_hoja(){
 template<class T>
 void arbol<T>::elimina(nodo<T>* pos, nodo<T>*& arbol) {
     if (arbol == nullptr || pos == nullptr){
-        std::cout << "Error: árbol o posición nulos" << std::endl;
+        std::cout << "Error: Ã¡rbol o posiciÃ³n nulos" << std::endl;
         return;
     }
     if(es_hoja(arbol))
