@@ -1,41 +1,5 @@
 #include <iostream>
 
-class SocioClub
-{
-    public:
-        std::string Nombre;
-        std::string Domicilio;
-        int NumeroSocio;
-        int AnioIngreso;
-        friend std::ostream & operator<<(std::ostream &O, SocioClub &x)
-        {
-                O<<"\n   Nombre: "<<x.Nombre<<std::endl;
-                O<<"\n   Domicilio: "<<x.Domicilio<<std::endl;
-                O<<"\n   Anio De Ingreso: "<<x.AnioIngreso<<std::endl;
-                O<<"\n   Numero De Ingreso: "<<x.NumeroSocio<<std::endl;
-                return O;
-        }
-        friend std::istream & operator>>(std::istream &O, SocioClub &x)
-        {
-                std::cout<<"\n     Nombre: ";
-                O>>x.Nombre;
-                std::cout<<"\n     Domicilio: ";
-                O>>x.Domicilio;
-                std::cout<<"\n     Anio De Ingreso: ";
-                O>>x.AnioIngreso;
-                std::cout<<"\n     Numero De Ingreso: ";
-                O>>x.NumeroSocio;
-                return O;
-        }
-
-         bool operator <(const SocioClub &a) {
-            return ( NumeroSocio < a.NumeroSocio);
-        }
-        bool operator >(const SocioClub &a) {
-            return ( NumeroSocio > a.NumeroSocio);
-        }
-};
-
 template<class T>
 class arbol;
 
@@ -60,6 +24,7 @@ private:
     void  recorrido_preorder(nodo<T>*);
     void  recorrido_inorder(nodo<T>*);
     void  recorrido_postorder(nodo<T>*);
+    void  recorrido_hoja(nodo<T>*);
     void  elimina(nodo<T>*,nodo<T>*&);
     int   altura(nodo<T>*);
 public:
@@ -76,6 +41,7 @@ public:
     void  recorrido_preorder();
     void  recorrido_inorder();
     void  recorrido_postorder();
+    void  recorrido_hoja();
     void  elimina(T);
     void  altura();
 };
@@ -284,9 +250,36 @@ void arbol<T>::recorrido_postorder(){
 }
 
 template<class T>
+void arbol<T>::recorrido_hoja(nodo<T>* arbol){
+    if(arbol==nullptr){
+        return;
+    }
+        recorrido_hoja(arbol->izq);
+        if(es_hoja(arbol)){
+            std::cout<<"\n\t ES HOJA:"<<std::endl;
+            std::cout<<"\n\t ->"<<arbol->data<<std::endl;
+        }
+        recorrido_hoja(arbol->der);
+    }
+
+template<class T>
+void arbol<T>::recorrido_hoja(){
+    std::cout<<"\n\t Recorrido por inorden: \n\t "<<std::endl;
+    recorrido_hoja(raiz);
+    std::cout<<"\n\t ";
+    system("pause");
+}
+
+template<class T>
 void arbol<T>::elimina(nodo<T>* pos, nodo<T>*& arbol) {
     if (arbol == nullptr || pos == nullptr){
         std::cout << "Error: árbol o posición nulos" << std::endl;
+        return;
+    }
+    if(es_hoja(arbol))
+    {
+        delete arbol;
+        arbol = nullptr;
         return;
     }
     else if(pos->data<arbol->data)
@@ -403,15 +396,16 @@ void recorrido(){
     std::cout<<"\n\t    5. Raiz. "<<std::endl;
     std::cout<<"\n\t    6. Mayor. "<<std::endl;
     std::cout<<"\n\t    7. Altura.   "<<std::endl;
-    std::cout<<"\n\t    8. Salir.   "<<std::endl;
+    std::cout<<"\n\t    8. Hojas.   "<<std::endl;
+    std::cout<<"\n\t    9. Salir.   "<<std::endl;
     std::cout<<"\n\t    Opcion:   ";
 }
 
 int main()
 {
-    arbol<SocioClub> tree;
+    arbol<T> tree;
     char lobby, pre_lobby;
-    SocioClub elem;
+    T elem;
     do
     {
         menu();
@@ -468,14 +462,17 @@ int main()
                 tree.altura();
                 break;
                 case '8':
-                pre_lobby = 8;
+                tree.recorrido_hoja();
+                break;
+                case '9':
+                pre_lobby = 9;
                 break;
                 default:
                 error();
                 break;
              }
             }
-            while(pre_lobby!=8);
+            while(pre_lobby!=9);
             }
             else
                 titulo_vacio();
